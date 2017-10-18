@@ -22,15 +22,13 @@ public class PretteyFormatStrategy implements FormatStrategy {
      * Drawing toolbox
      */
 
-    private static final char TOP_LEFT_CORNER = '?';
-    private static final char BOTTOM_LEFT_CORNER = '?';
-    private static final char MIDDLE_CORNER = '?';
-    private static final char HORIZONTAL_LINE = '?';
-    private static final String DOUBLE_DIVIDER = "????????????????????????????????????????????";
-    private static final String SINGLE_DIVIDER = "????????????????????????????????????????????";
-    private static final String TOP_BORDER = TOP_LEFT_CORNER + DOUBLE_DIVIDER + DOUBLE_DIVIDER;
-    private static final String BOTTOM_BORDER = BOTTOM_LEFT_CORNER + DOUBLE_DIVIDER +
-            DOUBLE_DIVIDER;
+    private static final char MIDDLE_CORNER = '|';
+    private static final char HORIZONTAL_LINE = '|';
+    private static final String DOUBLE_DIVIDER =
+            "-------------------------------------------------------------------------------------------";
+    private static final String SINGLE_DIVIDER = "-------------------------------------------------------------------------------------------";
+    private static final String TOP_BORDER = DOUBLE_DIVIDER + DOUBLE_DIVIDER;
+    private static final String BOTTOM_BORDER = DOUBLE_DIVIDER + DOUBLE_DIVIDER;
     private static final String MIDDLE_BORDER = MIDDLE_CORNER + SINGLE_DIVIDER + SINGLE_DIVIDER;
 
     private final int methodCount;
