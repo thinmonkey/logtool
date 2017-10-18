@@ -17,27 +17,27 @@ public class OutputAndroidLogcat extends com.zhanghao.log.OutputStrategyImp {
     public void log(com.zhanghao.log.LogBean logBean) {
         com.zhanghao.log.LogBean output = formatStrategy.covertMessage(logBean);
         switch (output.getPriority()) {
-            case LogTool.DEBUG:
+            case LogPrintImpl.DEBUG:
                 for (String content : output.getOutputContent()) {
                     Log.d(output.getTag(), content);
                 }
                 break;
-            case LogTool.VERBOSE:
+            case LogPrintImpl.VERBOSE:
                 for (String content : output.getOutputContent()) {
                     Log.v(output.getTag(), content);
                 }
                 break;
-            case LogTool.ERROR:
+            case LogPrintImpl.ERROR:
                 for (String content : output.getOutputContent()) {
                     Log.e(output.getTag(), content);
                 }
                 break;
-            case LogTool.INFO:
+            case LogPrintImpl.INFO:
                 for (String content : output.getOutputContent()) {
                     Log.i(output.getTag(), content);
                 }
                 break;
-            case LogTool.WARN:
+            case LogPrintImpl.WARN:
                 for (String content : output.getOutputContent()) {
                     Log.w(output.getTag(), content);
                 }
