@@ -11,9 +11,10 @@ public class LogBean implements Cloneable {
 
     private long time;
     private String tag;
+    private String keyword;
     private int priority;
-    private String sourceContent;
-    private ArrayList<String> outputContent = new ArrayList<>();
+    private String content;
+    private ArrayList<String> wrapContent;
     private StackTraceElement[] stackTraceElement;
 
     public String getTag() {
@@ -32,15 +33,20 @@ public class LogBean implements Cloneable {
         this.priority = priority;
     }
 
-    protected String getSourceContent() {
-        return sourceContent;
+    public String getContent() {
+        return content;
     }
 
-    protected void setSourceContent(String sourceContent) {
-        this.sourceContent = sourceContent;
-        if (!outputContent.contains(sourceContent)) {
-            outputContent.add(sourceContent);
-        }
+    protected void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     public long getTime() {
@@ -59,19 +65,19 @@ public class LogBean implements Cloneable {
         this.stackTraceElement = stackTraceElement;
     }
 
-    public ArrayList<String> getOutputContent() {
-        return outputContent;
+    public ArrayList<String> getWrapContent() {
+        return wrapContent;
     }
 
-    public void setOutputContent(ArrayList<String> outputContent) {
-        this.outputContent = outputContent;
+    public void setWrapContent(ArrayList<String> wrapContent) {
+        this.wrapContent = wrapContent;
     }
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
         try {
             LogBean logBean = (LogBean) super.clone();
-            logBean.outputContent = (ArrayList<String>) outputContent.clone();
+            logBean.wrapContent = (ArrayList<String>) wrapContent.clone();
             if (this.stackTraceElement != null) {
                 logBean.stackTraceElement = stackTraceElement.clone();
             }

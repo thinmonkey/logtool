@@ -7,6 +7,34 @@ package com.zhanghao.log;
 
 public class LogTool {
 
+    public void d(String tag, String message, String keyword) {
+        LogPrintImpl.getInstance().d(tag, message, keyword);
+    }
+
+    public void e(String tag, String message, String keyword) {
+        LogPrintImpl.getInstance().e(tag, message, keyword);
+    }
+
+    public void e(String tag, Throwable throwable, String keyword) {
+        LogPrintImpl.getInstance().e(tag, throwable, keyword);
+    }
+
+    public void e(String tag, String message, Throwable throwable, String keyword) {
+        LogPrintImpl.getInstance().e(tag, message, throwable, keyword);
+    }
+
+    public void i(String tag, String message, String keyword) {
+        LogPrintImpl.getInstance().i(tag, message, keyword);
+    }
+
+    public void w(String tag, String message, String keyword) {
+        LogPrintImpl.getInstance().w(tag, message, keyword);
+    }
+
+    public void v(String tag, String message, String keyword) {
+        LogPrintImpl.getInstance().v(tag, message, keyword);
+    }
+
     public static void d(String tag, String message) {
         LogPrintImpl.getInstance().d(tag, message);
     }

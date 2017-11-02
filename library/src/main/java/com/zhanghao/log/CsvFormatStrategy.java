@@ -78,7 +78,7 @@ public class CsvFormatStrategy implements FormatStrategy {
     public LogBean covertMessage(LogBean logBean) {
         String tag = this.formatTag(logBean.getTag());
         this.date.setTime(System.currentTimeMillis());
-        String message = logBean.getSourceContent();
+        String message = logBean.getContent();
         StringBuilder builder = new StringBuilder();
         builder.append(Long.toString(this.date.getTime()));
         builder.append(SEPARATOR);
@@ -94,7 +94,7 @@ public class CsvFormatStrategy implements FormatStrategy {
         builder.append(SEPARATOR);
         builder.append(message);
         builder.append(NEW_LINE);
-        logBean.setSourceContent(builder.toString());
+        logBean.setContent(builder.toString());
         return logBean;
     }
 }

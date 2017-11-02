@@ -6,6 +6,21 @@ package com.zhanghao.log;
  */
 
 public interface LogPrint {
+
+    void d(String tag, String message, String keyword);
+
+    void e(String tag, String message, String keyword);
+
+    void e(String tag, Throwable throwable, String keyword);
+
+    void e(String tag, String message, Throwable throwable, String keyword);
+
+    void i(String tag, String message, String keyword);
+
+    void w(String tag, String message, String keyword);
+
+    void v(String tag, String message, String keyword);
+
     void d(String tag, String message);
 
     void e(String tag, String message);

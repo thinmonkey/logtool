@@ -46,7 +46,7 @@ public class PretteyFormatStrategy implements FormatStrategy {
         if (TextUtils.isEmpty(logBean.getTag())) {
             logBean.setTag(tag);
         }
-        logBean.setOutputContent(createOutputContent(logBean));
+        logBean.setWrapContent(createOutputContent(logBean));
         return logBean;
     }
 
@@ -91,7 +91,7 @@ public class PretteyFormatStrategy implements FormatStrategy {
         }
         //get bytes of message with system's default charset (which is UTF-8 for Android)
         //???????
-        String sourceContent = logBean.getSourceContent();
+        String sourceContent = logBean.getContent();
         byte[] bytes = sourceContent.getBytes();
         int length = bytes.length;
         if (length <= CHUNK_SIZE) {

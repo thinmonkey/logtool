@@ -75,19 +75,6 @@ public class WindowManagerUtil {
      * @param context 必须为应用程序的Context.
      */
     public void createSmallWindow(final Context context) {
-       /*
-
-        if (smallWindow == null) {
-            smallWindow = new Button(context);
-            smallWindow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeSmallWindow();
-                    createBigWindow(context);
-                }
-            });
-            windowManager.addView(smallWindow, smallWindowParams);
-        }*/
         if (bigWindow == null) {
             bigWindow = new FloatView(context);
             baseAdapter = new LogAdapter(context, logBeans);
@@ -111,20 +98,7 @@ public class WindowManagerUtil {
         }
     }
 
-    /**
-     * 创建大悬浮窗
-     *
-     * @param context 必须为应用程序的Context.
-     */
-    public void createBigWindow(Context context) {
-        WindowManager windowManager = getWindowManager();
-        if (bigWindow == null) {
-            bigWindow = new FloatView(context);
-            baseAdapter = new LogAdapter(context, logBeans);
-            bigWindow.setAdapter(baseAdapter);
-//            windowManager.addView(bigWindow, bigWindow.getLogWindowParams());
-        }
-    }
+
 
     public void updateFloatView(List<LogBean> logBeanList) {
         if (logBeans.size() > 10) {

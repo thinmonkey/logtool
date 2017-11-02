@@ -21,6 +21,6 @@ public class OutputDisk extends OutputStrategyImp {
     @Override
     public void log(LogBean logBean) {
         LogBean output = formatStrategy.covertMessage(logBean);
-        diskWriteUtil.log(output.getPriority(), output.getSourceContent());
+        diskWriteUtil.log(output.getPriority(), output.getContent());
     }
 }

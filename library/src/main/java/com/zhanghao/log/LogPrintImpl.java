@@ -5,17 +5,17 @@ package com.zhanghao.log;
  * 2017/10/8-13:52
  */
 
-public class LogPrintImpl implements com.zhanghao.log.LogPrint {
+public class LogPrintImpl implements LogPrint {
 
     private boolean isLogToAndroid = true;
     private boolean isLogToDisk;
     private boolean isLogToNet;
     private boolean isLogToWindow;
 
-    private com.zhanghao.log.OutputAndroidLogcat outputAndroidLogcat;
-    private com.zhanghao.log.OutputDisk outputDisk;
-    private com.zhanghao.log.OutputNet outputNet;
-    private com.zhanghao.log.OutputWindow outputWindow;
+    private OutputAndroidLogcat outputAndroidLogcat;
+    private OutputDisk outputDisk;
+    private OutputNet outputNet;
+    private OutputWindow outputWindow;
 
     private String diskFilePath;
     private int diskFileMaxSize;
@@ -52,7 +52,7 @@ public class LogPrintImpl implements com.zhanghao.log.LogPrint {
     public static final int ASSERT = 7;
 
     private LogPrintImpl() {
-        outputAndroidLogcat = new com.zhanghao.log.OutputAndroidLogcat();
+        outputAndroidLogcat = new OutputAndroidLogcat();
     }
 
     static LogPrintImpl getInstance() {
@@ -74,64 +74,105 @@ public class LogPrintImpl implements com.zhanghao.log.LogPrint {
         this.diskFilePath = builder.diskFilePath;
         this.diskFileMaxSize = builder.diskFileMaxSize;
 
-        outputDisk = new com.zhanghao.log.OutputDisk(diskFilePath, diskFileMaxSize);
-        outputNet = new com.zhanghao.log.OutputNet();
+        outputDisk = new OutputDisk(diskFilePath, diskFileMaxSize);
+        outputNet = new OutputNet();
         if (builder.netAdapter != null) {
             outputNet.setLogAdapter(builder.netAdapter);
         }
-        outputWindow = new com.zhanghao.log.OutputWindow();
+        outputWindow = new OutputWindow();
         if (builder.windowAdapter != null) {
             outputWindow.setLogAdapter(builder.windowAdapter);
         }
     }
 
     @Override
-    public void d(String tag, String message) {
-        com.zhanghao.log.LogBean logBean = createLogBean(DEBUG, tag, message);
+    public void d(String tag, String message, String keyword) {
+        LogBean logBean = createLogBean(DEBUG, tag, message, keyword);
         printLog(logBean);
     }
 
     @Override
-    public void e(String tag, String message) {
-        com.zhanghao.log.LogBean logBean = createLogBean(ERROR, tag, message);
-        printLog(logBean);
-    }
-
-    @Override
-    public void i(String tag, String message) {
-        com.zhanghao.log.LogBean logBean = createLogBean(INFO, tag, message);
+    public void e(String tag, String message, String keyword) {
+        LogBean logBean = createLogBean(ERROR, tag, message, keyword);
         printLog(logBean);
     }
 
     @Override
     public void e(String tag, Throwable throwable) {
-        e(tag, null, throwable);
+        e(tag, throwable, null);
     }
 
     @Override
     public void e(String tag, String message, Throwable throwable) {
+        e(tag, message, throwable, null);
+    }
+
+
+    @Override
+    public void e(String tag, Throwable throwable, String keyword) {
+        e(tag, null, throwable, keyword);
+    }
+
+    @Override
+    public void e(String tag, String message, Throwable throwable, String keyword) {
         if (throwable != null && message != null) {
-            message += " : " + com.zhanghao.log.Utils.getStackTraceString(throwable);
+            message += " : " + Utils.getStackTraceString(throwable);
         }
         if (throwable != null && message == null) {
-            message = com.zhanghao.log.Utils.getStackTraceString(throwable);
+            message = Utils.getStackTraceString(throwable);
         }
-        if (com.zhanghao.log.Utils.isEmpty(message)) {
+        if (Utils.isEmpty(message)) {
             message = "Empty/NULL log message";
         }
-        com.zhanghao.log.LogBean logBean = createLogBean(ERROR, tag, message);
+        LogBean logBean = createLogBean(ERROR, tag, message, keyword);
+        printLog(logBean);
+    }
+
+    @Override
+    public void i(String tag, String message, String keyword) {
+        LogBean logBean = createLogBean(INFO, tag, message, keyword);
+        printLog(logBean);
+    }
+
+    @Override
+    public void w(String tag, String message, String keyword) {
+        LogBean logBean = createLogBean(WARN, tag, message, keyword);
+        printLog(logBean);
+    }
+
+    @Override
+    public void v(String tag, String message, String keyword) {
+        LogBean logBean = createLogBean(VERBOSE, tag, message, keyword);
+        printLog(logBean);
+    }
+
+    @Override
+    public void d(String tag, String message) {
+        LogBean logBean = createLogBean(DEBUG, tag, message, null);
+        printLog(logBean);
+    }
+
+    @Override
+    public void e(String tag, String message) {
+        LogBean logBean = createLogBean(ERROR, tag, message, null);
+        printLog(logBean);
+    }
+
+    @Override
+    public void i(String tag, String message) {
+        LogBean logBean = createLogBean(INFO, tag, message, null);
         printLog(logBean);
     }
 
     @Override
     public void w(String tag, String message) {
-        com.zhanghao.log.LogBean logBean = createLogBean(WARN, tag, message);
+        LogBean logBean = createLogBean(WARN, tag, message, null);
         printLog(logBean);
     }
 
     @Override
     public void v(String tag, String message) {
-        com.zhanghao.log.LogBean logBean = createLogBean(VERBOSE, tag, message);
+        LogBean logBean = createLogBean(VERBOSE, tag, message, null);
         printLog(logBean);
     }
 
@@ -145,49 +186,50 @@ public class LogPrintImpl implements com.zhanghao.log.LogPrint {
         v(null, message);
     }
 
-    private com.zhanghao.log.LogBean createLogBean(int debug, String tag, Object message) {
-        com.zhanghao.log.LogBean logBean = new com.zhanghao.log.LogBean();
+    private LogBean createLogBean(int debug, String tag, String message, String keyword) {
+        LogBean logBean = new LogBean();
         logBean.setPriority(debug);
         logBean.setTag(tag);
         logBean.setStackTraceElement(Thread.currentThread().getStackTrace());
         logBean.setTime(System.currentTimeMillis());
-        logBean.setSourceContent(com.zhanghao.log.Utils.toString(message));
+        logBean.setContent(message);
+        logBean.setKeyword(keyword);
         return logBean;
     }
 
-    public void setOutputAndroidLogcat(com.zhanghao.log.OutputAndroidLogcat outputAndroidLogcat) {
+    public void setOutputAndroidLogcat(OutputAndroidLogcat outputAndroidLogcat) {
         this.outputAndroidLogcat = outputAndroidLogcat;
     }
 
-    public void setOutputDisk(com.zhanghao.log.OutputDisk outputDisk) {
+    public void setOutputDisk(OutputDisk outputDisk) {
         this.outputDisk = outputDisk;
     }
 
-    public void setOutputNet(com.zhanghao.log.OutputNet outputNet) {
+    public void setOutputNet(OutputNet outputNet) {
         this.outputNet = outputNet;
     }
 
-    public void setOutputWindow(com.zhanghao.log.OutputWindow outputWindow) {
+    public void setOutputWindow(OutputWindow outputWindow) {
         this.outputWindow = outputWindow;
     }
 
-    public void setNetAdapter(com.zhanghao.log.LogAdapter logAdapter) {
+    public void setNetAdapter(LogAdapter logAdapter) {
         outputNet.setLogAdapter(logAdapter);
     }
 
-    private void printLog(com.zhanghao.log.LogBean logBean) {
+    private void printLog(LogBean logBean) {
         try {
             if (isLogToAndroid) {
-                outputAndroidLogcat.log((com.zhanghao.log.LogBean) logBean.clone());
+                outputAndroidLogcat.log((LogBean) logBean.clone());
             }
             if (isLogToDisk) {
-                outputDisk.log((com.zhanghao.log.LogBean) logBean.clone());
+                outputDisk.log((LogBean) logBean.clone());
             }
             if (isLogToNet) {
-                outputNet.log((com.zhanghao.log.LogBean) logBean.clone());
+                outputNet.log((LogBean) logBean.clone());
             }
             if (isLogToWindow) {
-                outputWindow.log((com.zhanghao.log.LogBean) logBean.clone());
+                outputWindow.log((LogBean) logBean.clone());
             }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
@@ -218,8 +260,8 @@ public class LogPrintImpl implements com.zhanghao.log.LogPrint {
         private boolean isLogToNet;
         private boolean isLogToWindow;
 
-        private com.zhanghao.log.LogAdapter netAdapter;
-        private com.zhanghao.log.LogAdapter windowAdapter;
+        private LogAdapter netAdapter;
+        private LogAdapter windowAdapter;
 
         public Builder setDiskFilePath(String diskFilePath) {
             this.diskFilePath = diskFilePath;
@@ -259,12 +301,12 @@ public class LogPrintImpl implements com.zhanghao.log.LogPrint {
             return this;
         }
 
-        public Builder setNetAdapter(com.zhanghao.log.LogAdapter netAdapter) {
+        public Builder setNetAdapter(LogAdapter netAdapter) {
             this.netAdapter = netAdapter;
             return this;
         }
 
-        public Builder setWindowAdapter(com.zhanghao.log.LogAdapter windowAdapter) {
+        public Builder setWindowAdapter(LogAdapter windowAdapter) {
             this.windowAdapter = windowAdapter;
             return this;
         }

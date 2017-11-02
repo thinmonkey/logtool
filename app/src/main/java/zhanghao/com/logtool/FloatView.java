@@ -41,33 +41,9 @@ public class FloatView extends LinearLayout {
     private void initView(Context context) {
         layoutInflater = LayoutInflater.from(context);
 
-        logWindowParams = new WindowManager.LayoutParams();
-        // 设置显示的位置，默认的是屏幕中心
-        logWindowParams.x = 0;
-        logWindowParams.y = 0;
-        logWindowParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-        logWindowParams.format = PixelFormat.RGBA_8888;
+        initLogLayoutParams(context);
 
-        // 设置交互模式
-        logWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-
-        logWindowParams.gravity = Gravity.RIGHT | Gravity.BOTTOM;
-        logWindowParams.width = getScreenWidth(context);
-        logWindowParams.height = getScreenHeight(context);
-
-        smallWindowParams = new WindowManager.LayoutParams();
-        // 设置显示类型为phone
-        smallWindowParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-        // 显示图片格式
-        smallWindowParams.format = PixelFormat.RGBA_8888;
-        // 设置交互模式
-        smallWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-        // 设置对齐方式为左上
-        smallWindowParams.gravity = Gravity.RIGHT | Gravity.BOTTOM;
-        smallWindowParams.width = FloatView.getScreenWidth(context) / 10;
-        smallWindowParams.height = FloatView.getScreenWidth(context) / 10;
-        smallWindowParams.x = 0;
-        smallWindowParams.y = 0;
+        initButtonLayoutParams(context);
 
         logView = layoutInflater.inflate(R.layout.layout_log, null);
         listView = (ListView) logView.findViewById(R.id.listview);
@@ -89,6 +65,38 @@ public class FloatView extends LinearLayout {
         currentWindowParam = smallWindowParams;
         currentStatus = TYPE_SHOW_BUTTON;
         addButtonView();
+    }
+
+    private void initButtonLayoutParams(Context context) {
+        smallWindowParams = new WindowManager.LayoutParams();
+        // 设置显示类型为phone
+        smallWindowParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        // 显示图片格式
+        smallWindowParams.format = PixelFormat.RGBA_8888;
+        // 设置交互模式
+        smallWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        // 设置对齐方式为左上
+        smallWindowParams.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        smallWindowParams.width = FloatView.getScreenWidth(context) / 10;
+        smallWindowParams.height = FloatView.getScreenWidth(context) / 10;
+        smallWindowParams.x = 0;
+        smallWindowParams.y = 0;
+    }
+
+    private void initLogLayoutParams(Context context) {
+        logWindowParams = new WindowManager.LayoutParams();
+        // 设置显示的位置，默认的是屏幕中心
+        logWindowParams.x = 0;
+        logWindowParams.y = 0;
+        logWindowParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        logWindowParams.format = PixelFormat.RGBA_8888;
+
+        // 设置交互模式
+        logWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+
+        logWindowParams.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        logWindowParams.width = getScreenWidth(context);
+        logWindowParams.height = getScreenHeight(context);
     }
 
     private void addButtonView() {
