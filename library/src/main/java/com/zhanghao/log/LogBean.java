@@ -77,7 +77,6 @@ public class LogBean implements Cloneable {
     protected Object clone() throws CloneNotSupportedException {
         try {
             LogBean logBean = (LogBean) super.clone();
-            logBean.wrapContent = (ArrayList<String>) wrapContent.clone();
             if (this.stackTraceElement != null) {
                 logBean.stackTraceElement = stackTraceElement.clone();
             }
