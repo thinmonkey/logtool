@@ -1,5 +1,9 @@
 package com.zhanghao.log;
 
+import android.os.Handler;
+import android.os.Looper;
+
+
 /**
  * Created by zhanghao.
  * 2017/10/8-13:52
@@ -50,6 +54,8 @@ public class LogPrintImpl implements LogPrint {
      * Priority constant for the println method.
      */
     public static final int ASSERT = 7;
+
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     private LogPrintImpl() {
         outputAndroidLogcat = new OutputAndroidLogcat();
@@ -217,23 +223,28 @@ public class LogPrintImpl implements LogPrint {
         outputNet.setLogAdapter(logAdapter);
     }
 
-    private void printLog(LogBean logBean) {
-        try {
-            if (isLogToAndroid) {
-                outputAndroidLogcat.log((LogBean) logBean.clone());
+    private void printLog(final LogBean logBean) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (isLogToAndroid) {
+                        outputAndroidLogcat.log((LogBean) logBean.clone());
+                    }
+                    if (isLogToDisk) {
+                        outputDisk.log((LogBean) logBean.clone());
+                    }
+                    if (isLogToNet) {
+                        outputNet.log((LogBean) logBean.clone());
+                    }
+                    if (isLogToWindow) {
+                        outputWindow.log((LogBean) logBean.clone());
+                    }
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
             }
-            if (isLogToDisk) {
-                outputDisk.log((LogBean) logBean.clone());
-            }
-            if (isLogToNet) {
-                outputNet.log((LogBean) logBean.clone());
-            }
-            if (isLogToWindow) {
-                outputWindow.log((LogBean) logBean.clone());
-            }
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     @Override
