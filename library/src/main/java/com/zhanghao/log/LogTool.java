@@ -71,7 +71,7 @@ public class LogTool {
         LogPrintImpl.getInstance().e(message);
     }
 
-    public void i(String message) {
+    public static void i(String message) {
         LogPrintImpl.getInstance().i(message);
     }
 
