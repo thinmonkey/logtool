@@ -50,7 +50,7 @@ public class DiskWriteUtil {
             FileWriter fileWriter = null;
             File logFile = getWritableLogFile();
             if (logFile == null) {
-                Log.e(DiskWriteUtil.class.getName(),"file path not found");
+                Log.e(DiskWriteUtil.class.getName(), "file path not found");
                 return;
             }
             try {
@@ -75,8 +75,13 @@ public class DiskWriteUtil {
         }
 
         public File getWritableLogFile() {
+            if (folder == null) {
+                Log.e(DiskWriteUtil.class.getName(), "folder is null");
+                return null;
+            }
             List<File> fileList = listFilesInDir(new File(folder));
             if (fileList == null) {
+                Log.e(DiskWriteUtil.class.getName(), "folder is not Directory");
                 return null;
             }
             for (File file : fileList) {
