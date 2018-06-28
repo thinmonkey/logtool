@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -35,8 +36,8 @@ public class DiskWriteUtil {
     }
 
     public static class WriteHandler extends Handler {
-        private final String folder;
-        private final int maxFileSize;
+        private String folder;
+        private int maxFileSize;
 
         public WriteHandler(Looper looper, String folder, int maxFileSize) {
             super(looper);
@@ -48,7 +49,10 @@ public class DiskWriteUtil {
             String content = (String) msg.obj;
             FileWriter fileWriter = null;
             File logFile = getWritableLogFile();
-
+            if (logFile == null) {
+                Log.e(DiskWriteUtil.class.getName(),"file path not found");
+                return;
+            }
             try {
                 fileWriter = new FileWriter(logFile, true);
                 this.writeLog(fileWriter, content);
@@ -72,6 +76,9 @@ public class DiskWriteUtil {
 
         public File getWritableLogFile() {
             List<File> fileList = listFilesInDir(new File(folder));
+            if (fileList == null) {
+                return null;
+            }
             for (File file : fileList) {
                 if (file.length() < maxFileSize) {
                     return file;
