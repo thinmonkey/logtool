@@ -5,7 +5,7 @@ package com.zhanghao.log;
  * 2017/10/8-14:17
  */
 
-public class OutputDisk extends OutputStrategyImp {
+public class OutputDisk extends OutputFormatStrategyAdapter {
 
     private DiskWriteUtil diskWriteUtil;
 

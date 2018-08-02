@@ -5,7 +5,7 @@ package com.zhanghao.log;
  * 2017/10/8-14:09
  */
 
-public abstract class OutputStrategyImp implements OutputStrategy {
+public abstract class OutputFormatStrategyAdapter implements OutputAnyAdapter {
 
     protected FormatStrategy formatStrategy;
 

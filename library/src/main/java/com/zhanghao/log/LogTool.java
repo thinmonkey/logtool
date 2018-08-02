@@ -86,4 +86,26 @@ public class LogTool {
     public static void init(LogPrintImpl.Builder builder) {
         LogPrintImpl.getInstance().init(builder);
     }
+
+    public static void setOutputAndroidLogcat(OutputAndroidLogcat outputAndroidLogcat) {
+        LogPrintImpl.getInstance().setOutputAndroidLogcat(outputAndroidLogcat);
+    }
+
+    public static void setOutputDisk(OutputDisk outputDisk) {
+        LogPrintImpl.getInstance().setOutputDisk(outputDisk);
+    }
+
+    public static void setOutputAdapter(OutputAnyAdapter logAdapter) {
+        LogPrintImpl.getInstance().setOutputAdapter(logAdapter);
+    }
+
+    public static void setLogToAndroid(boolean logToAndroid) {
+        LogPrintImpl.getInstance().setLogToAndroid(logToAndroid);
+    }
+
+    public static void setLogToDisk(boolean logToDisk) {
+        LogPrintImpl.getInstance().setLogToDisk(logToDisk);
+    }
+
+
 }

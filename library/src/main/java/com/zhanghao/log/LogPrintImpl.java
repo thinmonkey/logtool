@@ -13,16 +13,13 @@ public class LogPrintImpl implements LogPrint {
 
     private boolean isLogToAndroid = true;
     private boolean isLogToDisk;
-    private boolean isLogToNet;
-    private boolean isLogToWindow;
 
     private OutputAndroidLogcat outputAndroidLogcat;
     private OutputDisk outputDisk;
-    private OutputNet outputNet;
-    private OutputWindow outputWindow;
 
     private String diskFilePath;
     private int diskFileMaxSize;
+    private OutputAnyAdapter outputAnyAdapter;
 
     private static LogPrintImpl logPrintImpl;
     /**
@@ -74,21 +71,12 @@ public class LogPrintImpl implements LogPrint {
 
     public void init(Builder builder) {
         this.isLogToAndroid = builder.isLogToAndroid;
-        this.isLogToWindow = builder.isLogToWindow;
-        this.isLogToNet = builder.isLogToNet;
         this.isLogToDisk = builder.isLogToDisk;
         this.diskFilePath = builder.diskFilePath;
         this.diskFileMaxSize = builder.diskFileMaxSize;
 
-        outputDisk = new OutputDisk(diskFilePath, diskFileMaxSize);
-        outputNet = new OutputNet();
-        if (builder.netAdapter != null) {
-            outputNet.setLogAdapter(builder.netAdapter);
-        }
-        outputWindow = new OutputWindow();
-        if (builder.windowAdapter != null) {
-            outputWindow.setLogAdapter(builder.windowAdapter);
-        }
+        this.outputDisk = new OutputDisk(diskFilePath, diskFileMaxSize);
+        this.outputAnyAdapter = builder.outputAdapter;
     }
 
     @Override
@@ -211,16 +199,16 @@ public class LogPrintImpl implements LogPrint {
         this.outputDisk = outputDisk;
     }
 
-    public void setOutputNet(OutputNet outputNet) {
-        this.outputNet = outputNet;
+    public void setOutputAdapter(OutputAnyAdapter logAdapter) {
+        this.outputAnyAdapter = logAdapter;
     }
 
-    public void setOutputWindow(OutputWindow outputWindow) {
-        this.outputWindow = outputWindow;
+    public void setLogToAndroid(boolean logToAndroid) {
+        isLogToAndroid = logToAndroid;
     }
 
-    public void setNetAdapter(LogAdapter logAdapter) {
-        outputNet.setLogAdapter(logAdapter);
+    public void setLogToDisk(boolean logToDisk) {
+        isLogToDisk = logToDisk;
     }
 
     private void printLog(final LogBean logBean) {
@@ -234,11 +222,8 @@ public class LogPrintImpl implements LogPrint {
                     if (isLogToDisk) {
                         outputDisk.log((LogBean) logBean.clone());
                     }
-                    if (isLogToNet) {
-                        outputNet.log((LogBean) logBean.clone());
-                    }
-                    if (isLogToWindow) {
-                        outputWindow.log((LogBean) logBean.clone());
+                    if (outputAnyAdapter != null) {
+                        outputDisk.log((LogBean) logBean.clone());
                     }
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
@@ -268,11 +253,8 @@ public class LogPrintImpl implements LogPrint {
         private int diskFileMaxSize;
         private boolean isLogToAndroid = true;
         private boolean isLogToDisk;
-        private boolean isLogToNet;
-        private boolean isLogToWindow;
 
-        private LogAdapter netAdapter;
-        private LogAdapter windowAdapter;
+        private OutputAnyAdapter outputAdapter;
 
         public Builder setDiskFilePath(String diskFilePath) {
             this.diskFilePath = diskFilePath;
@@ -282,8 +264,6 @@ public class LogPrintImpl implements LogPrint {
         public Builder setLogOpen(boolean isOpen) {
             isLogToAndroid = isOpen;
             isLogToDisk = isOpen;
-            isLogToWindow = isOpen;
-            isLogToNet = isOpen;
             return this;
         }
 
@@ -302,24 +282,10 @@ public class LogPrintImpl implements LogPrint {
             return this;
         }
 
-        public Builder setLogToNet(boolean logToNet) {
-            isLogToNet = logToNet;
+        public Builder setOutputAdapter(OutputAnyAdapter outputAdapter) {
+            this.outputAdapter = outputAdapter;
             return this;
         }
 
-        public Builder setLogToWindow(boolean logToWindow) {
-            isLogToWindow = logToWindow;
-            return this;
-        }
-
-        public Builder setNetAdapter(LogAdapter netAdapter) {
-            this.netAdapter = netAdapter;
-            return this;
-        }
-
-        public Builder setWindowAdapter(LogAdapter windowAdapter) {
-            this.windowAdapter = windowAdapter;
-            return this;
-        }
     }
 }

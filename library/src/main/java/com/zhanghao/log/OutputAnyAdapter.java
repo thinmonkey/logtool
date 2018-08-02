@@ -5,7 +5,7 @@ package com.zhanghao.log;
  * 2017/10/8-13:50
  */
 
-public interface OutputStrategy {
+public interface OutputAnyAdapter {
 
     void log(LogBean logBean);
 
