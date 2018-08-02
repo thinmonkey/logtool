@@ -1,1 +1,1 @@
-include ':app', ':library',":ecarxlog"
+include ':app', ':library'
