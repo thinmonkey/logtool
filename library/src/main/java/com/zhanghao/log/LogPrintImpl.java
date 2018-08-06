@@ -223,7 +223,7 @@ public class LogPrintImpl implements LogPrint {
                         outputDisk.log((LogBean) logBean.clone());
                     }
                     if (outputAnyAdapter != null) {
-                        outputDisk.log((LogBean) logBean.clone());
+                        outputAnyAdapter.log((LogBean) logBean.clone());
                     }
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
