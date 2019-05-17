@@ -74,8 +74,10 @@ public class LogPrintImpl implements LogPrint {
         this.isLogToDisk = builder.isLogToDisk;
         this.diskFilePath = builder.diskFilePath;
         this.diskFileMaxSize = builder.diskFileMaxSize;
-
-        this.outputDisk = new OutputDisk(diskFilePath, diskFileMaxSize);
+        //文件目录不存在，则不会创建输出到sd卡的日志
+        if(diskFilePath != null) {
+            this.outputDisk = new OutputDisk(diskFilePath, diskFileMaxSize);
+        }
         this.outputAnyAdapter = builder.outputAdapter;
     }
 
@@ -220,7 +222,9 @@ public class LogPrintImpl implements LogPrint {
                         outputAndroidLogcat.log((LogBean) logBean.clone());
                     }
                     if (isLogToDisk) {
-                        outputDisk.log((LogBean) logBean.clone());
+                        if (outputDisk != null){
+                            outputDisk.log((LogBean) logBean.clone());
+                        }
                     }
                     if (outputAnyAdapter != null) {
                         outputAnyAdapter.log((LogBean) logBean.clone());
