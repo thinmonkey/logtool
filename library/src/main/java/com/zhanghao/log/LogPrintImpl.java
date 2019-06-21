@@ -3,6 +3,9 @@ package com.zhanghao.log;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 /**
  * Created by zhanghao.
@@ -53,6 +56,10 @@ public class LogPrintImpl implements LogPrint {
     public static final int ASSERT = 7;
 
     private Handler handler = new Handler(Looper.getMainLooper());
+    /**
+     * log线程池
+     */
+    ExecutorService logThreadPool;
 
     private LogPrintImpl() {
         outputAndroidLogcat = new OutputAndroidLogcat();
@@ -213,19 +220,59 @@ public class LogPrintImpl implements LogPrint {
         isLogToDisk = logToDisk;
     }
 
+    /**
+     * 设置线程池
+     * @param threadPool 线程池用于打印日志
+     */
+    public void setThreadPool(ExecutorService threadPool) {
+        this.logThreadPool = threadPool;
+    }
+
+    /**
+     * 获取线程池对象
+     * @return 线程池用于打印日志
+     */
+    public ExecutorService getThreadPool() {
+        return this.logThreadPool;
+    }
+
+    /**
+     * 关闭线程池
+     */
+    public void shutdownExecutorService() {
+        this.logThreadPool.shutdown();
+    }
+
+    /**
+     * 打印日志
+     * @param logBean 日志对象
+     * 用固定线程池可保证日志按顺序打印,扩展日志打印需要用户自己指定线程
+     */
     private void printLog(final LogBean logBean) {
         handler.post(new Runnable() {
             @Override
             public void run() {
                 try {
-                    if (isLogToAndroid) {
-                        outputAndroidLogcat.log((LogBean) logBean.clone());
+                    if(logThreadPool == null){
+                        logThreadPool = Executors.newFixedThreadPool(1);
                     }
-                    if (isLogToDisk) {
-                        if (outputDisk != null){
-                            outputDisk.log((LogBean) logBean.clone());
+                    logThreadPool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (isLogToAndroid) {
+                                    outputAndroidLogcat.log((LogBean) logBean.clone());
+                                }
+                                if (isLogToDisk) {
+                                    if (outputDisk != null){
+                                        outputDisk.log((LogBean) logBean.clone());
+                                    }
+                                }
+                            } catch (CloneNotSupportedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
+                    });
                     if (outputAnyAdapter != null) {
                         outputAnyAdapter.log((LogBean) logBean.clone());
                     }
