@@ -19,7 +19,7 @@ import android.widget.ListView;
  */
 
 public class FloatView extends LinearLayout {
-
+    //
     public static final int TYPE_SHOW_BUTTON = 0;
     public static final int TYPE_SHOW_DETAIL = 1;
     private WindowManager.LayoutParams logWindowParams;
